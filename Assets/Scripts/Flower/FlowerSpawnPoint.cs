@@ -13,11 +13,18 @@ public class FlowerSpawnPoint : MonoBehaviour {
 
     private GameObject flower;
 
+    void Start()
+    {
+        Renderer r = GetComponent<Renderer>();
+        if (r != null)
+        {
+            r.enabled = false;
+        }
+    }
+
     public void Spawn(GameObject prefab)
     {
         haveFlower = true;
-        flower = Instantiate(prefab) as GameObject;
-        flower.transform.SetParent(transform);
-        flower.transform.localPosition = Vector3.zero;
+        flower = Instantiate(prefab, transform.position, Quaternion.identity) as GameObject;
     }
 }

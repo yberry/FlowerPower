@@ -14,8 +14,8 @@ public class FlowerSpawn : MonoBehaviour {
     [Tooltip("Points de spawn des fleurs")]
     public FlowerSpawnPoint[] spawnPoints;
 
-    [Tooltip("Préfab de fleur")]
-    public GameObject prefabFlower;
+    [Tooltip("Préfabs de fleurs")]
+    public GameObject[] prefabsFlower;
 
 	// Use this for initialization
 	void Start () {
@@ -28,14 +28,14 @@ public class FlowerSpawn : MonoBehaviour {
         {
             float rand = freqSpawnMin < freqSpawnMax ? Random.Range(freqSpawnMin, freqSpawnMax) : Random.Range(freqSpawnMax, freqSpawnMin);
             yield return new WaitForSeconds(rand);
-            bool occupe = true;
+
             foreach (FlowerSpawnPoint point in spawnPoints)
             {
-                occupe &= point.HaveFlower;
-            }
-            if (!occupe)
-            {
-                Spawn();
+                if (!point.HaveFlower)
+                {
+                    Spawn();
+                    break;
+                }
             }
         }
     }
@@ -47,6 +47,6 @@ public class FlowerSpawn : MonoBehaviour {
         {
             rand = Random.Range(0, spawnPoints.Length);
         }
-        spawnPoints[rand].Spawn(prefabFlower);
+        spawnPoints[rand].Spawn(prefabsFlower[Random.Range(0, prefabsFlower.Length)]);
     }
 }
