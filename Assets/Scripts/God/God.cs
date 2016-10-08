@@ -28,8 +28,8 @@ public class God : MonoBehaviour {
 	
 	}
 
-    public bool IsUnderGodView(Vector3 pos)
+   /* public bool IsUnderGodView(Vector3 pos)
     {
         Vector3 sightPos = sight.transform.position;
-    }
+    }*/
 }

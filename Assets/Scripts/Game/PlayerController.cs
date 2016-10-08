@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
     bool onGround = false;
     bool jumping = false;
 
+    bool floorTouch;
+    bool rightSideTouch;
+    bool leftSideTouch;
 
     Rigidbody2D rig;
 
@@ -109,4 +112,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter2D(Collision2D coll)
+    {
+        if(coll.gameObject.tag == "platform")
+        {
+            foreach(ContactPoint2D touch in coll.contacts)
+            {
+                //Debug.Log(touch.otherCollider.collider2D.);
+            }
+        }
+    }
 }
