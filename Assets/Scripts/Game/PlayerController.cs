@@ -5,27 +5,31 @@ public class PlayerController : MonoBehaviour
 {
     public float frictionCoeff;
     public float jumpSize;
+    public float jumpSizeModifier;
+    public float jumpTimer;
     public float gravity;
+    public LayerMask groundLayer;
+
+
+    float jumpSizeLive;
 
     [System.NonSerialized]
     Vector2 velocity;
     Vector2 acceleration;
     Vector2 friction = Vector2.zero;
 
-    float jumpTimer = 0.0f;
-
+    float jumpTimerLive;
 
     bool canMove = true;
     bool onGround = false;
-    bool canJump = false;
+    bool jumping = false;
+
 
     Rigidbody2D rig;
-    BoxCollider2D box;
 
     void Awake()
     {
         rig = GetComponent<Rigidbody2D>();
-        box = GetComponent<BoxCollider2D>();
     }
 
     // Use this for initialization
@@ -43,18 +47,10 @@ public class PlayerController : MonoBehaviour
     void Move()
     {
         float horMove = Input.GetAxis("hor_move");
-        bool jumpInputDown = Input.GetButtonDown("Jump");
         bool jumpInput = Input.GetButton("Jump");
 
-        if (jumpInputDown){
-            jumpTimer = 10.0f;
-            Debug.Log(jumpTimer);
-
-        }
-
-
         acceleration.x = horMove;
-        //float verMove = Input.GetAxis("ver_move");
+
         if (canMove)
         {
             //Horizontal movement
@@ -65,45 +61,52 @@ public class PlayerController : MonoBehaviour
                 velocity.x = 10.0f;
 
             //Vertical movement
-            if (!onGround){
+            if (!rig.IsTouchingLayers(groundLayer))
+            {
                 acceleration.y = -gravity;
             }
-            else{
+            else
+            {
+                jumping = false;
+                onGround = true;
                 acceleration.y = 0.0f;
                 velocity.y = 0.0f;
             }
 
 
             //Add friction only when the player doesn't touch the joystick
-            if (horMove == 0){
+            if (horMove == 0)
+            {
                 friction.x = -1 * velocity.normalized.x * frictionCoeff;
                 velocity.x += friction.x;
+                if(velocity.x < 0.5f)
+                {
+                    velocity.x = 0.0f;
+                }
             }
 
             //Jump behaviour
-            if (canJump){
-                if (jumpInput && jumpTimer > 0.0f){
-                    jumpTimer -= Time.deltaTime;
-                    acceleration.y += jumpSize;
-                } else {
-                    canJump = false;
-                    onGround = false;
-
-                }
+            if (jumpInput && onGround) //When the button is pressed
+            {
+                acceleration.y = jumpSize;
+                jumpSizeLive = jumpSize;
+                jumping = true;
+                onGround = false;
+                jumpTimerLive = jumpTimer;
             }
+            if (jumpInput && jumpTimerLive > 0.0f) //While on jump
+            {
+                acceleration.y = jumpSizeLive;
+                jumpSizeLive = jumpSizeLive * jumpSizeModifier;
+            }
+            if (jumping) { //Decrement the timer
+                jumpTimerLive -= Time.deltaTime;
+            }
+
             velocity.y += acceleration.y;
 
             rig.velocity = velocity;
         }
     }
 
-    void OnCollisionEnter2D(Collision2D coll){
-        float collBoxYSize = coll.gameObject.GetComponent<BoxCollider2D>().size.y;
-        if (coll.gameObject.tag == "platform" && !onGround){
-            transform.position = new Vector2(transform.position.x, coll.gameObject.transform.position.y + collBoxYSize + 0.1f);
-            onGround = true;
-            canJump = true;
-            Debug.Log("uech copain");
-        }
-    }
 }
