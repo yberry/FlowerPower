@@ -74,11 +74,11 @@ public class PlayerController : MonoBehaviour
                 onGround = true;
                 if (downsideTouch)
                 {
-                    velocity.y = -2.0f;
+                    velocity.y = -4.0f;
                     acceleration.y = -gravity;
                     onGround = false;
                 }
-                if (leftsideTouch || rightsideTouch)
+                else if (leftsideTouch || rightsideTouch)
                 {
                     velocity.y = -wallSpeedVelocity;
                     acceleration.y = 0.0f;
