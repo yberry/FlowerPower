@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
     private const int maxFlowers = 5;
 
-    private int nbFlowers = 0;
+    private List<Flower> flowers;
     public bool complete
     {
         get
         {
-            return nbFlowers == maxFlowers;
+            return flowers.Count == maxFlowers;
         }
     }
 
@@ -17,7 +18,7 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+        flowers = new List<Flower>();
 	}
 	
 	// Update is called once per frame
@@ -25,11 +26,14 @@ public class Player : MonoBehaviour {
         underGod = God.Get.IsUnderGodView(transform.position);
 	}
 
-    public void GrabFlower()
+    public void GrabFlower(Flower flower)
     {
-        if (!complete)
+        if (complete)
         {
-            nbFlowers++;
+            return;
         }
+        flowers.Add(flower);
+        flower.transform.SetParent(transform);
+        flower.transform.localPosition = Vector3.zero;
     }
 }

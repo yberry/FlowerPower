@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class God : MonoBehaviour {
 
@@ -33,6 +32,19 @@ public class God : MonoBehaviour {
         Vector3 direction = pos - sight.transform.position;
         Vector3 forward = sight.transform.forward;
 
-        return Vector3.Angle(direction, forward) <= sight.spotAngle;
+        if (Vector3.Angle(direction, forward) > sight.spotAngle)
+        {
+            return false;
+        }
+
+        RaycastHit hit;
+        if (Physics.Raycast(sight.transform.position, direction, out hit))
+        {
+            return hit.transform.tag != "platform";
+        }
+        else
+        {
+            return true;
+        }
     }
 }

@@ -11,8 +11,6 @@ public class FlowerSpawnPoint : MonoBehaviour {
         }
     }
 
-    private GameObject flower;
-
     void Start()
     {
         Renderer r = GetComponent<Renderer>();
@@ -25,6 +23,12 @@ public class FlowerSpawnPoint : MonoBehaviour {
     public void Spawn(GameObject prefab)
     {
         haveFlower = true;
-        flower = Instantiate(prefab, transform.position, Quaternion.identity) as GameObject;
+        GameObject flower = Instantiate(prefab, transform.position, Quaternion.identity) as GameObject;
+        flower.GetComponent<Flower>().SetPoint(this);
+    }
+
+    public void Free()
+    {
+        haveFlower = false;
     }
 }
