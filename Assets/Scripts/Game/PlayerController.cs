@@ -57,11 +57,9 @@ public class PlayerController : MonoBehaviour
         float horMove = Input.GetAxis("hor_move");
         bool jumpInput = Input.GetButton("Jump");
 
-        acceleration.x = horMove;
-
         if (canMove)
         {
-            //Horizontal movement
+            acceleration.x = horMove;
 
             //Vertical movement
             if (!rig.IsTouchingLayers(groundLayer))
@@ -74,18 +72,24 @@ public class PlayerController : MonoBehaviour
                 onGround = true;
                 if (downsideTouch)
                 {
-                    velocity.y = -4.0f;
+                    velocity.y = -2.0f;
                     acceleration.y = -gravity;
                     onGround = false;
+
+                    jumping = false;
                 }
                 else if (leftsideTouch || rightsideTouch)
                 {
-                    velocity.y = -wallSpeedVelocity;
-                    acceleration.y = 0.0f;
-                    onGround = false;
-                    onWall = true;
+                    if (!upsideTouch)
+                    {
+                        velocity.y = -wallSpeedVelocity;
+                        acceleration.y = 0.0f;
+                        onGround = false;
+
+                        onWall = true;
+                    }
                 }
-                else
+                else if(onGround)
                 {
                     acceleration.y = 0.0f;
                     velocity.y = 0.0f;
@@ -102,19 +106,21 @@ public class PlayerController : MonoBehaviour
                 onGround = false;
                 jumpTimerLive = jumpTimer;
             }
-            if (jumpInput && jumpTimerLive > 0.0f && jumping) //While on jump
-            {
-                acceleration.y = jumpSizeLive;
-                jumpSizeLive = jumpSizeLive * jumpSizeModifier;
-            }
             if (jumping) { //Decrement the timer
+                if (jumpInput && jumpTimerLive > 0.0f) //While on jump
+                {
+                    acceleration.y = jumpSizeLive;
+                    jumpSizeLive = jumpSizeLive * jumpSizeModifier;
+                }
                 jumpTimerLive -= Time.deltaTime;
             }
+
 
             if(jumpInput && onWall)
             {
                 acceleration.y = jumpSize/2;
-                if (leftsideTouch) {
+                if (leftsideTouch)
+                {
                     acceleration.x = -wallJumpVelocity; 
                 }
                 if (rightsideTouch)
@@ -123,7 +129,6 @@ public class PlayerController : MonoBehaviour
                 }
                 onWall = false;
             }
-
             velocity.y += acceleration.y;
 
             //Add friction only when the player doesn't touch the joystick
@@ -161,7 +166,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnTriggerStay2D(Collider2D coll)
+    void OnTriggerEnter2D(Collider2D coll)
     {
        switch(coll.gameObject.tag)
         {
