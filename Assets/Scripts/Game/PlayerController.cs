@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     bool canMove = true;
     bool onGround = false;
     bool jumping = false;
-
+    bool facingRight = true;
     bool floorTouch;
     bool rightSideTouch;
     bool leftSideTouch;
@@ -82,7 +82,11 @@ public class PlayerController : MonoBehaviour
             {
                 friction.x = -1 * velocity.normalized.x * frictionCoeff;
                 velocity.x += friction.x;
-                if(velocity.x < 0.5f)
+                if(velocity.x < 0.5f && facingRight)
+                {
+                    velocity.x = 0.0f;
+                }
+                if(velocity.x > 0.5f && !facingRight)
                 {
                     velocity.x = 0.0f;
                 }
@@ -110,6 +114,15 @@ public class PlayerController : MonoBehaviour
 
             rig.velocity = velocity;
         }
+
+        if(velocity.x < 0.0f && facingRight)
+        {
+            flip();
+        }
+        else if (velocity.x > 0.0f && !facingRight)
+        {
+            flip();
+        }
     }
 
     void OnCollisionEnter2D(Collision2D coll)
@@ -121,5 +134,15 @@ public class PlayerController : MonoBehaviour
                 //Debug.Log(touch.otherCollider.collider2D.);
             }
         }
+    }
+
+    //Flip the character's sprite
+    void flip()
+    {
+        facingRight = !facingRight;
+
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
     }
 }
