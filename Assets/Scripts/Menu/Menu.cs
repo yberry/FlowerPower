@@ -26,14 +26,14 @@ public class Menu : MonoBehaviour {
         }
         currentMenu = rect;
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
     public void GO()
     {
         SceneManager.LoadScene("Game");
+    }
+
+    public void Exit()
+    {
+        Application.Quit();
     }
 }
