@@ -25,12 +25,11 @@ public class God : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+	    //Définir mouvement
 	}
 
     public bool IsUnderGodView(Vector3 pos)
     {
-
         Vector3 direction = pos - sight.transform.position;
         Vector3 forward = sight.transform.forward;
 
