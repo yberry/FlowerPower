@@ -24,15 +24,7 @@ public class Player : MonoBehaviour {
     }
     private bool grabing = false;
     private bool attacked = false;
-    private bool attacking = false;
-    public bool IsAttacking
-    {
-        get
-        {
-            return attacking;
-        }
-    }
-    
+    private bool attacking = false;    
 
 	// Use this for initialization
 	void Start () {
@@ -47,7 +39,7 @@ public class Player : MonoBehaviour {
             return;
         }
 
-        if (Input.GetButtonDown("Grab"))
+        /*if (Input.GetButtonDown("Grab"))
         {
             grabing = true;
             if (underGod && flowers.Count > 0)
@@ -64,8 +56,24 @@ public class Player : MonoBehaviour {
             }
         }
 
-
+        else if (Input.GetButtonDown("Attack") && flowers.Count > 0)
+        {
+            attacking = true;
+            Attack();
+        }*/
 	}
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.transform.tag == "Player" && col.transform.GetComponent<Player>().attacking)
+        {
+            if (!attacking)
+            {
+                attacked = false;
+            }
+            attacking = false;
+        }
+    }
 
     void OnTriggerEnter2D(Collider2D col)
     {
