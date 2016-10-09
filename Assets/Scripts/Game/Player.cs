@@ -30,14 +30,20 @@ public class Player : MonoBehaviour {
 
     public bool attacked { get; set; }
     public bool attacking { get; set; }
+    public bool launching { get; set; }
 
     [Tooltip("Joueur 1 ?")]
     public bool player1;
+    [Tooltip("Affichage des coeurs")]
+    public Inventory inventory;
+    [Tooltip("Affichage du karma")]
+    public Karma karma;
 
 	// Use this for initialization
 	void Start () {
         attacked = false;
         attacking = false;
+        launching = false;
 
         animator = GetComponent<Animator>();
         RuntimeAnimatorController ac = animator.runtimeAnimatorController;
@@ -63,7 +69,7 @@ public class Player : MonoBehaviour {
             return;
         }
 
-        if (Input.GetButtonDown("Launch") && underGod)
+        if (Input.GetButtonDown("Launch") && underGod && !animator.GetBool("inAir"))
         {
             animator.SetTrigger("offer");
             LaunchFlower();
@@ -88,7 +94,11 @@ public class Player : MonoBehaviour {
     {
         if (col.tag == "Flower" && !attacked)
         {
-            GrabFlower(col.GetComponent<Flower>());
+            Flower flower = col.GetComponent<Flower>();
+            if (flower.Grabable && !flower.IsOwner(this))
+            {
+                GrabFlower(flower);
+            }
         }
     }
 
@@ -98,10 +108,11 @@ public class Player : MonoBehaviour {
         {
             return;
         }
-        flower.Grab();
+        flower.Grab(this);
         flowers.Add(flower);
         flower.transform.SetParent(transform);
         flower.transform.localPosition = Vector3.zero;
+        inventory.SetNbFlowers(flowers.Count);
         SoundEffectController.Instance.MakePickFlowerSound();
     }
 
@@ -128,6 +139,7 @@ public class Player : MonoBehaviour {
             flower.Throw(init);
         }
         flowers.Clear();
+        inventory.SetNbFlowers(0);
         SoundEffectController.Instance.MakeHurtSound();
         if (!animator.GetBool("inAir"))
         {
@@ -139,6 +151,7 @@ public class Player : MonoBehaviour {
     {
         yield return new WaitForSeconds(coolDownAttacked);
         attacked = false;
+        launching = false;
     }
 
     void LaunchFlower()
@@ -149,5 +162,12 @@ public class Player : MonoBehaviour {
         }
         flowers[0].Launch();
         flowers.RemoveAt(0);
+        inventory.SetNbFlowers(flowers.Count);
+        StartCoroutine(CoolDownAttacked());
+    }
+
+    public void AddKarma()
+    {
+        karma.AddHeart();
     }
 }
