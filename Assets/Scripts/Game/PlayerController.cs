@@ -251,15 +251,7 @@ public class PlayerController : MonoBehaviour
         }
         if(coll.gameObject.tag == "downside") downsideTouch = true;
         if(coll.gameObject.tag == "leftside") leftsideTouch = true;
-        if(coll.gameObject.tag == "rightside") rightsideTouch = true;
-
-        if (tag == "Player2")
-        {
-            if (coll.gameObject.tag == "headTrigger")
-            {
-                rig.velocity = new Vector2(rig.velocity.x, -10.0f);
-            }
-        }
+        if (coll.gameObject.tag == "rightside") rightsideTouch = true;
     }
 
     void OnTriggerStay2D(Collider2D coll)
