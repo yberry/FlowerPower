@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering;
 using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
@@ -30,6 +31,10 @@ public class Player : MonoBehaviour {
 	void Start () {
         triggers = new List<Flower>();
         flowers = new List<Flower>();
+
+        Renderer ren = GetComponent<Renderer>();
+        ren.shadowCastingMode = ShadowCastingMode.On;
+        ren.receiveShadows = true;
 	}
 	
 	// Update is called once per frame
@@ -39,7 +44,7 @@ public class Player : MonoBehaviour {
             return;
         }
 
-        /*if (Input.GetButtonDown("Grab"))
+        if (Input.GetButtonDown("Grab"))
         {
             grabing = true;
             if (underGod && flowers.Count > 0)
@@ -60,17 +65,14 @@ public class Player : MonoBehaviour {
         {
             attacking = true;
             Attack();
-        }*/
+        }
 	}
 
     void OnCollisionEnter2D(Collision2D col)
     {
         if (col.transform.tag == "Player" && col.transform.GetComponent<Player>().attacking)
         {
-            if (!attacking)
-            {
-                attacked = false;
-            }
+            Attacked(false);
             attacking = false;
         }
     }
