@@ -27,7 +27,7 @@ public class Player : MonoBehaviour {
         }
     }
 
-    private float coolDownAttacked;
+    private const float coolDownAttacked = 0.5f;
 
     public bool attacked { get; set; }
     public bool attacking { get; set; }
@@ -47,14 +47,6 @@ public class Player : MonoBehaviour {
         launching = false;
 
         animator = GetComponent<Animator>();
-        RuntimeAnimatorController ac = animator.runtimeAnimatorController;
-        foreach (AnimationClip clip in ac.animationClips)
-        {
-            if (clip.name == "P" + (player1 ? "1" : "2") + "_hurt")
-            {
-                coolDownAttacked = clip.length;
-            }
-        }
 
         flowers = new List<Flower>();
 
@@ -84,7 +76,7 @@ public class Player : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.transform.tag == "Player" && col.transform.GetComponent<Player>().attacking)
+        if (col.transform.tag.StartsWith("Player") && col.transform.GetComponent<Player>().attacking)
         {
             Attacked(false);
             attacking = false;
@@ -137,6 +129,7 @@ public class Player : MonoBehaviour {
             //animator.SetTrigger("attack");
             SoundEffectController.Instance.MakeAttackSound();
             attacking = true;
+            StartCoroutine(CoolDownAttacked());
         }
     }
 
@@ -166,6 +159,7 @@ public class Player : MonoBehaviour {
         yield return new WaitForSeconds(coolDownAttacked);
         attacked = false;
         launching = false;
+        attacking = false;
     }
 
     void LaunchFlower()

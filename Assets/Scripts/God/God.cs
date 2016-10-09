@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(AudioSource))]
 public class God : MonoBehaviour {
 
     private static God instance;
@@ -13,6 +14,7 @@ public class God : MonoBehaviour {
     }
 
     private Animator animator;
+    private AudioSource source;
 
     private float time = 0f;
     private bool block = false;
@@ -35,6 +37,10 @@ public class God : MonoBehaviour {
     public float maxAngle = 30f;
     [Tooltip("Vitesse de rotation")]
     public float rotationSpeed = 3f;
+    [Tooltip("Sons de joie")]
+    public AudioClip[] happySounds;
+    [Tooltip("Sons de colère")]
+    public AudioClip[] angrySounds;
 
 	// Use this for initialization
 	void Start () {
@@ -65,6 +71,7 @@ public class God : MonoBehaviour {
         lightController.rotation = Quaternion.identity;
 
         animator = GetComponent<Animator>();
+        source = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -98,7 +105,7 @@ public class God : MonoBehaviour {
         RaycastHit hit;
         if (Physics.Raycast(sight.transform.position, direction, out hit))
         {
-            return hit.transform.tag != "platform";
+            return hit.transform.tag.StartsWith("Player");
         }
         else
         {
@@ -108,6 +115,7 @@ public class God : MonoBehaviour {
 
     public IEnumerator Happy()
     {
+        source.PlayOneShot(happySounds[Random.Range(0, happySounds.Length)]);
         animator.SetBool("colere", false);
         animator.SetBool("content", true);
         yield return new WaitForSeconds(5f);
@@ -116,6 +124,7 @@ public class God : MonoBehaviour {
 
     public IEnumerator Angry()
     {
+        source.PlayOneShot(angrySounds[Random.Range(0, angrySounds.Length)]);
         animator.SetBool("content", false);
         animator.SetBool("colere", true);
         yield return new WaitForSeconds(5f);

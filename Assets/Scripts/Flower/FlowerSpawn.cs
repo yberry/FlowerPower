@@ -17,6 +17,9 @@ public class FlowerSpawn : MonoBehaviour {
     [Tooltip("Préfabs de fleurs")]
     public GameObject[] prefabsFlower;
 
+    [Tooltip("Sons de spawn")]
+    public AudioClip[] spawnSounds;
+
 	// Use this for initialization
 	void Start () {
         StartCoroutine(SpawnLoop());
@@ -47,6 +50,6 @@ public class FlowerSpawn : MonoBehaviour {
         {
             rand = Random.Range(0, spawnPoints.Length);
         }
-        spawnPoints[rand].Spawn(prefabsFlower[Random.Range(0, prefabsFlower.Length)]);
+        spawnPoints[rand].Spawn(prefabsFlower[Random.Range(0, prefabsFlower.Length)], spawnSounds[Random.Range(0, spawnSounds.Length)]);
     }
 }

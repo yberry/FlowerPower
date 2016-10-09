@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class FlowerSpawnPoint : MonoBehaviour {
 
     private bool haveFlower = false;
@@ -11,6 +12,8 @@ public class FlowerSpawnPoint : MonoBehaviour {
         }
     }
 
+    private AudioSource source;
+
     void Start()
     {
         Renderer r = GetComponent<Renderer>();
@@ -18,13 +21,15 @@ public class FlowerSpawnPoint : MonoBehaviour {
         {
             r.enabled = false;
         }
+        source = GetComponent<AudioSource>();
     }
 
-    public void Spawn(GameObject prefab)
+    public void Spawn(GameObject prefab, AudioClip clip)
     {
         haveFlower = true;
         GameObject flower = Instantiate(prefab, transform.position, Quaternion.identity) as GameObject;
         flower.GetComponent<Flower>().SetPoint(this);
+        source.PlayOneShot(clip);
     }
 
     public void Free()
