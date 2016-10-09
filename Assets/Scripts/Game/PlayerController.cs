@@ -104,19 +104,19 @@ public class PlayerController : MonoBehaviour
                 onWall = false;
                 onGround = true;
             }
-            else if(leftsideTouch || rightsideTouch)
-            {
-                velocity.y = -wallSpeedVelocity;
-                acceleration.y = -gravity;
-                onGround = false;
-                onWall = true;
-            }
             else if (downsideTouch)
             {
                 velocity.y = -2.0f;
                 acceleration.y = -gravity;
                 onGround = false;
                 jumping = false;
+            }
+            else if(leftsideTouch || rightsideTouch)
+            {
+                velocity.y = -wallSpeedVelocity;
+                acceleration.y = -gravity;
+                onGround = false;
+                onWall = true;
             }
             else
             {
