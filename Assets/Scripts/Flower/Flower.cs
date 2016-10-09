@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Renderer))]
 [RequireComponent(typeof(Collider2D))]
@@ -94,10 +95,19 @@ public class Flower : MonoBehaviour {
         float angle = Random.Range(Mathf.PI / 6f, 5f * Mathf.PI / 6f);
         Vector2 velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
         rig.velocity = velocity;
+        StartCoroutine(Destruction());
+    }
+
+    IEnumerator Destruction()
+    {
+        yield return new WaitForSeconds(2f);
+        Destroy(gameObject);
     }
 
     public void Launch()
     {
+        transform.SetParent(null);
+        ren.enabled = true;
         grabable = true;
         godAttracted = true;
     }

@@ -102,15 +102,7 @@ public class God : MonoBehaviour {
             return false;
         }
 
-        RaycastHit hit;
-        if (Physics.Raycast(sight.transform.position, direction, out hit))
-        {
-            return hit.transform.tag.StartsWith("Player");
-        }
-        else
-        {
-            return true;
-        }
+        return !Physics.Raycast(sight.transform.position, direction);
     }
 
     public IEnumerator Happy()

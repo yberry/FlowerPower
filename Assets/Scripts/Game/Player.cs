@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -207,5 +208,10 @@ public class Player : MonoBehaviour {
     public void AddKarma()
     {
         karma.AddHeart();
+        if (karma.IsMax)
+        {
+            PlayerPrefs.SetInt("victoire", player1 ? 1 : 2);
+            SceneManager.LoadScene("End");
+        }
     }
 }
