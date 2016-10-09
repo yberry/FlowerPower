@@ -168,10 +168,7 @@ public class Player : MonoBehaviour {
         flowers.Clear();
         inventory.SetNbFlowers(0);
         SoundEffectController.Instance.MakeHurtSound();
-        if (player.onGround)
-        {
-            StartCoroutine(CoolDownAttacked());
-        }
+        StartCoroutine(CoolDownAttacked());
     }
 
     IEnumerator CoolDownAttacked()
