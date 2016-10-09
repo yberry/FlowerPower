@@ -38,9 +38,9 @@ public class PlayerController : MonoBehaviour
     float stepTime = 0.15f;
     float stepTimeLive;
 
+    public string[] input;
 
     Rigidbody2D rig;
-    SoundEffectController sounds;
 
     //Flip the character's sprite
     private void flip()
@@ -55,7 +55,6 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         rig = GetComponent<Rigidbody2D>();
-        sounds = SoundEffectController.Instance;
     }
 
     // Update is called once per frame
@@ -66,9 +65,9 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        float horMove = Input.GetAxis("hor_move");
-        bool jumpInput = Input.GetButton("Jump");
-        bool jumpInputDown = Input.GetButtonDown("Jump");
+        float horMove = Input.GetAxis(input[0]);
+        bool jumpInput = Input.GetButton(input[1]);
+        bool jumpInputDown = Input.GetButtonDown(input[1]);
 
         if (canMove)
         {
@@ -123,7 +122,6 @@ public class PlayerController : MonoBehaviour
                     jumping = true;
                     onGround = false;
                     jumpTimerLive = jumpTimer;
-                    Debug.Log("JUMP");
                 }
             }
 
@@ -172,7 +170,7 @@ public class PlayerController : MonoBehaviour
             if(velocity.magnitude > 1.0f && onGround && stepTimeLive <= 0.0f)
             {
                 stepTimeLive = stepTime;
-                sounds.MakeStepSound();
+                SoundEffectController.Instance.MakeStepSound();
             }
             if(stepTimeLive > 0.0f)
             {
@@ -205,7 +203,7 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D coll)
     {
-        sounds.MakeLandingSound();
+        SoundEffectController.Instance.MakeLandingSound();
         if (coll.gameObject.tag == "upside") upsideTouch = true;
         if(coll.gameObject.tag == "downside") downsideTouch = true;
         if(coll.gameObject.tag == "leftside") leftsideTouch = true;
@@ -217,18 +215,18 @@ public class PlayerController : MonoBehaviour
         if (coll.gameObject.tag == "upside")
         {
             upsideTouch = false;
-            sounds.MakeJumpSound();
+            SoundEffectController.Instance.MakeJumpSound();
         }
         if (coll.gameObject.tag == "downside") downsideTouch = false;
         if (coll.gameObject.tag == "leftside")
         {
             leftsideTouch = false;
-            sounds.MakeWallJumpSound();
+            SoundEffectController.Instance.MakeWallJumpSound();
         }
         if (coll.gameObject.tag == "rightside")
         {
             rightsideTouch = false;
-            sounds.MakeWallJumpSound();
+            SoundEffectController.Instance.MakeWallJumpSound();
         }
     }
 }
