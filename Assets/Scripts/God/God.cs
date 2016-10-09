@@ -16,6 +16,8 @@ public class God : MonoBehaviour {
     private Quaternion minRotation;
     private Quaternion maxRotation;
 
+    [Tooltip("Contrôleur lumière")]
+    public Transform lightController;
     [Tooltip("Lumière divine")]
     public Light sight;
     [Tooltip("Position de départ")]
@@ -53,15 +55,18 @@ public class God : MonoBehaviour {
         minRotation = Quaternion.AngleAxis(minAngle, Vector3.forward);
         maxRotation = Quaternion.AngleAxis(maxAngle, Vector3.forward);
 
+        float z = transform.position.z;
+        startPosition.position = new Vector3(startPosition.position.x, startPosition.position.y, z);
+        endPosition.position = new Vector3(endPosition.position.x, endPosition.position.y, z);
         transform.position = (startPosition.position + endPosition.position) / 2f;
-        transform.rotation = Quaternion.identity;
+        lightController.rotation = Quaternion.identity;
 	}
 	
 	// Update is called once per frame
 	void Update () {
         if (block)
         {
-
+            //Nice to have
         }
         else
         {
@@ -71,7 +76,7 @@ public class God : MonoBehaviour {
             float coefRotation = (1 + Mathf.Sin(rotationSpeed * time)) / 2f;
 
             transform.position = Vector3.Lerp(startPosition.position, endPosition.position, coefPosition);
-            transform.rotation = Quaternion.Lerp(minRotation, maxRotation, coefRotation);
+            lightController.rotation = Quaternion.Lerp(minRotation, maxRotation, coefRotation);
         }
 	}
 
@@ -80,7 +85,7 @@ public class God : MonoBehaviour {
         Vector3 direction = pos - sight.transform.position;
         Vector3 forward = sight.transform.forward;
 
-        if (Vector3.Angle(direction, forward) > sight.spotAngle)
+        if (Vector3.Angle(direction, forward) > sight.spotAngle / 2f)
         {
             return false;
         }
