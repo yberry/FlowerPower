@@ -99,6 +99,7 @@ public class PlayerController : MonoBehaviour
                 acceleration.y = -gravity;
                 onGround = false;
                 onWall = true;
+                jumping = false;
             }
             else
             {
