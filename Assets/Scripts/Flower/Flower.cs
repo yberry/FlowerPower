@@ -27,6 +27,13 @@ public class Flower : MonoBehaviour {
         }
     }
 
+    private bool godAttracted = false;
+
+    [Tooltip("Vitesse de chute de la fleur")]
+    public float fallSpeed = 1f;
+    [Tooltip("Vitesse de lancer de la fleur vers Dieu")]
+    public float lauchSpeed = 1f;
+
 	// Use this for initialization
 	void Start () {
         ren = GetComponent<Renderer>();
@@ -36,7 +43,12 @@ public class Flower : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+	    if (!godAttracted)
+        {
+            return;
+        }
+
+        transform.position = Vector3.MoveTowards(transform.position, God.Get.transform.position, lauchSpeed * Time.deltaTime);
 	}
 
     public void SetPoint(FlowerSpawnPoint p)
@@ -55,9 +67,11 @@ public class Flower : MonoBehaviour {
             point.Free();
             point = null;
         }
+        godAttracted = false;
         ren.enabled = false;
         col.enabled = false;
         grabable = false;
+        rig.gravityScale = 0f;
     }
 
     public void Throw(bool underGod)
@@ -65,6 +79,7 @@ public class Flower : MonoBehaviour {
         transform.SetParent(null);
         ren.enabled = true;
         grabable = !underGod;
+        rig.gravityScale = 1f;
 
         float angle = Random.Range(Mathf.PI / 6f, 5f * Mathf.PI / 6f);
         Vector2 velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
@@ -73,6 +88,7 @@ public class Flower : MonoBehaviour {
 
     public void Launch()
     {
-
+        grabable = true;
+        godAttracted = true;
     }
 }

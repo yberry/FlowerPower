@@ -76,6 +76,10 @@ public class PlayerController : MonoBehaviour
                 onWall = false;
                 onGround = true;
                 jumping = false;
+                if(leftsideTouch || rightsideTouch) //Down corner case
+                {
+                    velocity.x = 0.0f;
+                }
             }
             else if (downsideTouch)
             {
@@ -84,7 +88,7 @@ public class PlayerController : MonoBehaviour
                 onGround = false;
                 jumping = false;
                 onWall = false;
-                if(leftsideTouch || rightsideTouch) //Corner case
+                if(leftsideTouch || rightsideTouch) //Upper Corner case
                 {
                     velocity.x = 0.0f;
                 }
@@ -95,6 +99,7 @@ public class PlayerController : MonoBehaviour
                 acceleration.y = -gravity;
                 onGround = false;
                 onWall = true;
+                jumping = false;
             }
             else
             {
