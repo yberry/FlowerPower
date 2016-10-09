@@ -88,6 +88,7 @@ public class Flower : MonoBehaviour {
     {
         transform.SetParent(null);
         ren.enabled = true;
+        col.enabled = true;
         grabable = !underGod;
         rig.gravityScale = 1f;
         owner = null;
@@ -108,6 +109,7 @@ public class Flower : MonoBehaviour {
     {
         transform.SetParent(null);
         ren.enabled = true;
+        col.enabled = true;
         grabable = true;
         godAttracted = true;
     }
