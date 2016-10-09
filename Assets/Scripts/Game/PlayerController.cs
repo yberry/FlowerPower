@@ -98,6 +98,11 @@ public class PlayerController : MonoBehaviour
                 if(leftsideTouch || rightsideTouch) //Upper Corner case
                 {
                     velocity.x = 0.0f;
+                    if(tag == "Player")
+                        animator.Play("P1_idle");
+                    if (tag == "Player2")
+                        animator.Play("P2_idle");
+
                 }
             }
             else if(leftsideTouch || rightsideTouch)
@@ -107,6 +112,10 @@ public class PlayerController : MonoBehaviour
                 onGround = false;
                 onWall = true;
                 jumping = false;
+                if(tag == "Player")
+                    animator.Play("p1_atterrir");
+                if (tag == "Player2")
+                    animator.Play("P2_atterrir");
             }
             else
             {
@@ -119,6 +128,10 @@ public class PlayerController : MonoBehaviour
             {
                 if (jumpInput) //When the button is pressed
                 {
+                    if (tag == "Player")
+                        animator.Play("p1_decollage");
+                    if (tag == "Player2")
+                        animator.Play("p2_decollage");
                     acceleration.y = jumpSize;
                     jumpSizeLive = jumpSize;
                     jumping = true;
@@ -142,6 +155,10 @@ public class PlayerController : MonoBehaviour
             {
                 if (jumpInput)
                 {
+                    if(tag == "Player")
+                        animator.Play("p1_onair");
+                    if(tag == "Player2")
+                        animator.Play("p2_onair");
                     acceleration.y = wallJumpSize;
                     if (leftsideTouch)
                     {
@@ -162,10 +179,24 @@ public class PlayerController : MonoBehaviour
                 if (velocity.x < 0.5f && facingRight)
                 {
                     velocity.x = 0.0f;
+                    if (onGround)
+                    {
+                        if (tag == "Player")
+                            animator.Play("P1_idle");
+                        if (tag == "Player2")
+                            animator.Play("P2_idle");
+                    }
                 }
                 if (velocity.x > 0.5f && !facingRight)
                 {
                     velocity.x = 0.0f;
+                    if (onGround)
+                    {
+                        if (tag == "Player")
+                            animator.Play("P1_idle");
+                        if (tag == "Player2")
+                            animator.Play("P2_idle");
+                    }
                 }
             }
 
@@ -190,8 +221,13 @@ public class PlayerController : MonoBehaviour
                 velocity.x = 10.0f;
 
             rig.velocity = velocity * movementCoeff;
-            animator.SetBool("run", (rig.velocity.x != 0f) && onGround);
-            animator.SetBool("jump0", jumping);
+            if(rig.velocity.x != 0f && onGround)
+            {
+                if(tag == "Player")
+                    animator.Play("P1_run");
+                if(tag == "Player2")
+                    animator.Play("p2_run");
+            }
         }
         
         //Sprite facing on the good direction
@@ -211,10 +247,8 @@ public class PlayerController : MonoBehaviour
         if (coll.gameObject.tag == "upside")
         {
             upsideTouch = true;
-            animator.SetBool("inAir", false);
-            animator.SetTrigger("land");
         }
-        if(coll.gameObject.tag == "downside") downsideTouch = true;
+        if (coll.gameObject.tag == "downside") downsideTouch = true;
         if(coll.gameObject.tag == "leftside") leftsideTouch = true;
         if(coll.gameObject.tag == "rightside") rightsideTouch = true;
     }
@@ -225,18 +259,29 @@ public class PlayerController : MonoBehaviour
         {
             upsideTouch = false;
             SoundEffectController.Instance.MakeJumpSound();
-            animator.SetTrigger("jump");
+            if(tag == "Player")
+                animator.Play("p1_onair");
+            if(tag == "Player2")
+                animator.Play("p2_onair");
         }
         if (coll.gameObject.tag == "downside") downsideTouch = false;
         if (coll.gameObject.tag == "leftside")
         {
             leftsideTouch = false;
             SoundEffectController.Instance.MakeWallJumpSound();
+            if (tag == "Player")
+                animator.Play("p1_onair");
+            if (tag == "Player2")
+                animator.Play("p2_onair");
         }
         if (coll.gameObject.tag == "rightside")
         {
             rightsideTouch = false;
             SoundEffectController.Instance.MakeWallJumpSound();
+            if (tag == "Player")
+                animator.Play("p1_onair");
+            if (tag == "Player2")
+                animator.Play("p2_onair");
         }
     }
 }
