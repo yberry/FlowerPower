@@ -42,6 +42,7 @@ public class Player : MonoBehaviour {
 
     public string[] input;
     PlayerController player;
+    public GameObject fxElec;
 
 	// Use this for initialization
 	void Start () {
@@ -164,6 +165,7 @@ public class Player : MonoBehaviour {
         {
             StartCoroutine(God.Get.Angry());
             SoundEffectController.Instance.MakePunishedSound();
+            //Instantiate(fxElec, transform.position, Quaternion.identity);
         }
         flowers.Clear();
         inventory.SetNbFlowers(0);
@@ -199,7 +201,6 @@ public class Player : MonoBehaviour {
         flowers.RemoveAt(0);
         inventory.SetNbFlowers(flowers.Count);
         StartCoroutine(CoolDownAttacked());
-        AddKarma();
     }
 
     public void AddKarma()
