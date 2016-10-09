@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class God : MonoBehaviour {
 
@@ -10,6 +11,8 @@ public class God : MonoBehaviour {
             return instance;
         }
     }
+
+    private Animator animator;
 
     private float time = 0f;
     private bool block = false;
@@ -60,6 +63,8 @@ public class God : MonoBehaviour {
         endPosition.position = new Vector3(endPosition.position.x, endPosition.position.y, z);
         transform.position = (startPosition.position + endPosition.position) / 2f;
         lightController.rotation = Quaternion.identity;
+
+        animator = GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
@@ -99,5 +104,19 @@ public class God : MonoBehaviour {
         {
             return true;
         }
+    }
+
+    public IEnumerator Happy()
+    {
+        animator.SetBool("content", true);
+        yield return new WaitForSeconds(5f);
+        animator.SetBool("content", false);
+    }
+
+    public IEnumerator Angry()
+    {
+        animator.SetBool("colere", true);
+        yield return new WaitForSeconds(5f);
+        animator.SetBool("colere", false);
     }
 }

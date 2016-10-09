@@ -34,7 +34,7 @@ public class Flower : MonoBehaviour {
     [Tooltip("Vitesse de chute de la fleur")]
     public float fallSpeed = 1f;
     [Tooltip("Vitesse de lancer de la fleur vers Dieu")]
-    public float lauchSpeed = 1f;
+    public float launchSpeed = 1f;
 
 	// Use this for initialization
 	void Start () {
@@ -50,8 +50,8 @@ public class Flower : MonoBehaviour {
             return;
         }
 
-        transform.position = Vector3.MoveTowards(transform.position, God.Get.transform.position, lauchSpeed * Time.deltaTime);
-        transform.rotation = Quaternion.AngleAxis(lauchSpeed * Time.deltaTime, Vector3.forward);
+        transform.position = Vector3.MoveTowards(transform.position, God.Get.transform.position, launchSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.AngleAxis(launchSpeed * Time.deltaTime, Vector3.forward);
 	}
 
     public void SetPoint(FlowerSpawnPoint p)
@@ -107,6 +107,7 @@ public class Flower : MonoBehaviour {
         if (col.tag == "God")
         {
             owner.AddKarma();
+            StartCoroutine(col.GetComponent<God>().Happy());
             Destroy(gameObject);
         }
     }
