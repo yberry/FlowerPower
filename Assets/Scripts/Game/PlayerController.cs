@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public float jumpSizeModifier;
     public float jumpTimer;
     public float gravity;
+    public float wallJumpSize;
     public float wallSpeedVelocity;
     public float wallJumpVelocity;
     public bool releaseButtonToJump;
@@ -28,6 +29,8 @@ public class PlayerController : MonoBehaviour
     bool jumping = false;
     bool facingRight = true;
     bool onWall = false;
+
+    //Collision states
     bool upsideTouch;
     bool downsideTouch;
     bool rightsideTouch;
@@ -35,15 +38,19 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D rig;
 
+    //Flip the character's sprite
+    private void flip()
+    {
+        facingRight = !facingRight;
+
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+    }
+
     void Awake()
     {
         rig = GetComponent<Rigidbody2D>();
-    }
-
-    // Use this for initialization
-    void Start()
-    {
-
     }
 
     // Update is called once per frame
@@ -62,47 +69,13 @@ public class PlayerController : MonoBehaviour
             acceleration.x = horMove;
 
             //Vertical movement
-            /*if (!rig.IsTouchingLayers(groundLayer))
-            {
-                    acceleration.y = -gravity;
-            }
-            else
-            {
-                jumping = false;
-                onGround = true;
-                if (downsideTouch)
-                {
-                    velocity.y = -2.0f;
-                    acceleration.y = -gravity;
-                    onGround = false;
-
-                    jumping = false;
-                }
-                else if (leftsideTouch || rightsideTouch)
-                {
-                    if (!upsideTouch)
-                    {
-                        velocity.y = -wallSpeedVelocity;
-                        acceleration.y = 0.0f;
-                        onGround = false;
-
-                        onWall = true;
-                    }
-                }
-                else if(onGround)
-                {
-                    acceleration.y = 0.0f;
-                    velocity.y = 0.0f;
-                    onWall = false;
-                }
-            }*/
-
             if (upsideTouch)
             {
                 acceleration.y = 0.0f;
                 velocity.y = 0.0f;
                 onWall = false;
                 onGround = true;
+                jumping = false;
             }
             else if (downsideTouch)
             {
@@ -110,6 +83,10 @@ public class PlayerController : MonoBehaviour
                 acceleration.y = -gravity;
                 onGround = false;
                 jumping = false;
+                if(leftsideTouch || rightsideTouch) //Corner case
+                {
+                    velocity.x = 0.0f;
+                }
             }
             else if(leftsideTouch || rightsideTouch)
             {
@@ -140,7 +117,7 @@ public class PlayerController : MonoBehaviour
             //Jump behaviour
             if (jumping)
             {
-                if (jumpInput && jumpTimerLive > 0.0f) //While on jump
+                if (jumpInput && jumpTimerLive > 0.0f)
                 {
                     acceleration.y = jumpSizeLive;
                     jumpSizeLive = jumpSizeLive * jumpSizeModifier;
@@ -150,12 +127,12 @@ public class PlayerController : MonoBehaviour
 
             if (onWall)
             {
-                if(jumpInput)
+                if (jumpInput && !jumping)
                 {
-                    acceleration.y = jumpSize * 2.5f;
+                    acceleration.y = wallJumpSize;
                     if (leftsideTouch)
                     {
-                        acceleration.x = -wallJumpVelocity; 
+                        acceleration.x = -wallJumpVelocity;
                     }
                     if (rightsideTouch)
                     {
@@ -163,8 +140,6 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-
-            velocity.y += acceleration.y;
 
             //Add friction only when the player doesn't touch the joystick
             if (horMove == 0)
@@ -181,6 +156,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+            velocity.y += acceleration.y;
             velocity.x += acceleration.x;
 
             //Velocity cap
@@ -192,7 +168,7 @@ public class PlayerController : MonoBehaviour
             rig.velocity = velocity;
         }
         
-        //Sptire facing on the good direction
+        //Sprite facing on the good direction
         if(horMove < 0.0f && facingRight)
         {
             flip();
@@ -205,7 +181,7 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D coll)
     {
-       switch(coll.gameObject.tag)
+       /*switch(coll.gameObject.tag)
         {
             case "upside": upsideTouch = true;
                 break;
@@ -215,12 +191,16 @@ public class PlayerController : MonoBehaviour
                 break;
             case "rightside": rightsideTouch = true;
                 break;
-        }
+        }*/
+        if(coll.gameObject.tag == "upside") upsideTouch = true;
+        if(coll.gameObject.tag == "downside") downsideTouch = true;
+        if(coll.gameObject.tag == "leftside") leftsideTouch = true;
+        if(coll.gameObject.tag == "rightside") rightsideTouch = true;
     }
 
     void OnTriggerExit2D(Collider2D coll)
     {
-        switch (coll.gameObject.tag)
+        /*switch (coll.gameObject.tag)
         {
             case "upside": upsideTouch = false;
                 break;
@@ -230,16 +210,10 @@ public class PlayerController : MonoBehaviour
                 break;
             case "rightside": rightsideTouch = false;
                 break;
-        }
-    }
-
-    //Flip the character's sprite
-    void flip()
-    {
-        facingRight = !facingRight;
-
-        Vector3 theScale = transform.localScale;
-        theScale.x *= -1;
-        transform.localScale = theScale;
+        }*/
+        if (coll.gameObject.tag == "upside") upsideTouch = false;
+        if (coll.gameObject.tag == "downside") downsideTouch = false;
+        if (coll.gameObject.tag == "leftside") leftsideTouch = false;
+        if (coll.gameObject.tag == "rightside") rightsideTouch = false;
     }
 }
