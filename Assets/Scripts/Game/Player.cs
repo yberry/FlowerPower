@@ -164,6 +164,7 @@ public class Player : MonoBehaviour {
         if (init)
         {
             StartCoroutine(God.Get.Angry());
+            SoundEffectController.Instance.MakePunishedSound();
         }
         flowers.Clear();
         //inventory.SetNbFlowers(0);
