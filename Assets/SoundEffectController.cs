@@ -9,6 +9,11 @@ public class SoundEffectController : MonoBehaviour {
     public AudioClip[] wallJumpSound;
     public AudioClip[] landingSound;
     public AudioClip[] stepSound;
+    public AudioClip[] attackSound;
+    public AudioClip[] hurtSound;
+    public AudioClip[] punishedSound;
+    public AudioClip[] pickFlowerSound;
+
 
 
     void Awake()
@@ -43,6 +48,30 @@ public class SoundEffectController : MonoBehaviour {
     {
         int sound = Random.Range(0, stepSound.Length);
         MakeSound(stepSound[sound]);
+    }
+
+    public void MakeAttackSound()
+    {
+        int sound = Random.Range(0, attackSound.Length);
+        MakeSound(attackSound[sound]);
+    }
+
+    public void MakeHurtSound()
+    {
+        int sound = Random.Range(0, hurtSound.Length);
+        MakeSound(hurtSound[sound]);
+    }
+
+    public void MakePunishedSound()
+    {
+        int sound = Random.Range(0, punishedSound.Length);
+        MakeSound(punishedSound[sound]);
+    }
+
+    public void MakePickFlowerSound()
+    {
+        int sound = Random.Range(0, pickFlowerSound.Length);
+        MakeSound(pickFlowerSound[sound]);
     }
 
     /// <summary>

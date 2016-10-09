@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
+    SoundEffectController sounds;
+
     private const int maxFlowers = 5;
 
     private List<Flower> flowers;
@@ -80,10 +82,12 @@ public class Player : MonoBehaviour {
         flowers.Add(flower);
         flower.transform.SetParent(transform);
         flower.transform.localPosition = Vector3.zero;
+        sounds.MakePickFlowerSound();
     }
 
     void Attack()
     {
+        sounds.MakeAttackSound();
         if (underGod)
         {
             Attacked(true);
@@ -102,6 +106,7 @@ public class Player : MonoBehaviour {
             flower.Throw(init);
         }
         flowers.Clear();
+        sounds.MakeHurtSound();
     }
 
     void LaunchFlower()

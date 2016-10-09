@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
+    public float movementCoeff;
     public float frictionCoeff;
     public float jumpSize;
     public float jumpSizeModifier;
@@ -188,7 +189,7 @@ public class PlayerController : MonoBehaviour
             else if (velocity.x > 10.0f)
                 velocity.x = 10.0f;
 
-            rig.velocity = velocity;
+            rig.velocity = velocity * movementCoeff;
         }
         
         //Sprite facing on the good direction
