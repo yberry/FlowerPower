@@ -5,8 +5,6 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
-    SoundEffectController sounds;
-
     private Animator animator;
 
     private const int maxFlowers = 5;
@@ -104,7 +102,7 @@ public class Player : MonoBehaviour {
         flowers.Add(flower);
         flower.transform.SetParent(transform);
         flower.transform.localPosition = Vector3.zero;
-        sounds.MakePickFlowerSound();
+        SoundEffectController.Instance.MakePickFlowerSound();
     }
 
     void Attack()
@@ -116,7 +114,7 @@ public class Player : MonoBehaviour {
         else
         {
             animator.SetTrigger("attack");
-            sounds.MakeAttackSound();
+            SoundEffectController.Instance.MakeAttackSound();
             attacking = true;
         }
     }
@@ -130,7 +128,7 @@ public class Player : MonoBehaviour {
             flower.Throw(init);
         }
         flowers.Clear();
-        sounds.MakeHurtSound();
+        SoundEffectController.Instance.MakeHurtSound();
         if (!animator.GetBool("inAir"))
         {
             StartCoroutine(CoolDownAttacked());

@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     bool canMove = true;
     bool onGround = false;
     bool jumping = false;
-    bool facingRight = true;
+    bool facingRight = false;
     bool onWall = false;
 
     //Collision states
@@ -87,8 +87,6 @@ public class PlayerController : MonoBehaviour
                 {
                     velocity.x = 0.0f;
                 }
-                animator.SetBool("inAir", false);
-                animator.SetTrigger("land");
             }
             else if (downsideTouch)
             {
@@ -126,7 +124,6 @@ public class PlayerController : MonoBehaviour
                     jumping = true;
                     onGround = false;
                     jumpTimerLive = jumpTimer;
-                    animator.SetTrigger("jump");
                 }
             }
 
@@ -193,7 +190,8 @@ public class PlayerController : MonoBehaviour
                 velocity.x = 10.0f;
 
             rig.velocity = velocity * movementCoeff;
-            animator.SetBool("run", rig.velocity.x != 0f);
+            animator.SetBool("run", (rig.velocity.x != 0f) && onGround);
+            animator.SetBool("jump0", jumping);
         }
         
         //Sprite facing on the good direction
@@ -210,7 +208,12 @@ public class PlayerController : MonoBehaviour
     void OnTriggerEnter2D(Collider2D coll)
     {
         SoundEffectController.Instance.MakeLandingSound();
-        if (coll.gameObject.tag == "upside") upsideTouch = true;
+        if (coll.gameObject.tag == "upside")
+        {
+            upsideTouch = true;
+            animator.SetBool("inAir", false);
+            animator.SetTrigger("land");
+        }
         if(coll.gameObject.tag == "downside") downsideTouch = true;
         if(coll.gameObject.tag == "leftside") leftsideTouch = true;
         if(coll.gameObject.tag == "rightside") rightsideTouch = true;
@@ -222,6 +225,7 @@ public class PlayerController : MonoBehaviour
         {
             upsideTouch = false;
             SoundEffectController.Instance.MakeJumpSound();
+            animator.SetTrigger("jump");
         }
         if (coll.gameObject.tag == "downside") downsideTouch = false;
         if (coll.gameObject.tag == "leftside")
