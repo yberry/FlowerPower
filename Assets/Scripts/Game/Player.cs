@@ -22,7 +22,8 @@ public class Player : MonoBehaviour {
     {
         get
         {
-            return God.Get.IsUnderGodView(transform.position);
+            //return God.Get.IsUnderGodView(transform.position);
+            return false;
         }
     }
 
@@ -64,7 +65,8 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (attacked || attacking || flowers.Count == 0)
+        //|| flowers.Count == 0
+        if (attacked || attacking)
         {
             return;
         }
@@ -74,12 +76,11 @@ public class Player : MonoBehaviour {
             animator.SetTrigger("offer");
             LaunchFlower();
         }
-
         else if (Input.GetButtonDown("Attack"))
         {
             Attack();
         }
-	}
+    }
 
     void OnCollisionEnter2D(Collision2D col)
     {
@@ -118,13 +119,22 @@ public class Player : MonoBehaviour {
 
     void Attack()
     {
+
         if (underGod)
         {
             Attacked(true);
         }
         else
         {
-            animator.SetTrigger("attack");
+            if(tag == "Player")
+            {
+                animator.Play("P1_attaque_sol");
+            }
+            if (tag == "Player2")
+            {
+                animator.Play("P2_attaque_sol");
+            }
+            //animator.SetTrigger("attack");
             SoundEffectController.Instance.MakeAttackSound();
             attacking = true;
         }
