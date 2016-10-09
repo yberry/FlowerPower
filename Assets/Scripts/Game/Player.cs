@@ -6,7 +6,6 @@ public class Player : MonoBehaviour {
 
     private const int maxFlowers = 5;
 
-    private List<Flower> triggers;
     private List<Flower> flowers;
     public bool complete
     {
@@ -23,13 +22,11 @@ public class Player : MonoBehaviour {
             return God.Get.IsUnderGodView(transform.position);
         }
     }
-    private bool grabing = false;
     private bool attacked = false;
     private bool attacking = false;    
 
 	// Use this for initialization
 	void Start () {
-        triggers = new List<Flower>();
         flowers = new List<Flower>();
 
         Renderer ren = GetComponent<Renderer>();
@@ -39,26 +36,14 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (grabing || attacked || attacking)
+        if (attacked || attacking)
         {
             return;
         }
 
-        if (Input.GetButtonDown("Grab"))
+        if (Input.GetButtonDown("Launch") && underGod && flowers.Count > 0)
         {
-            grabing = true;
-            if (underGod && flowers.Count > 0)
-            {
-                LaunchFlower();
-            }
-            else
-            {
-                foreach (Flower flower in triggers)
-                {
-                    GrabFlower(flower);
-                }
-                triggers.Clear();
-            }
+            LaunchFlower();
         }
 
         else if (Input.GetButtonDown("Attack") && flowers.Count > 0)
@@ -79,29 +64,9 @@ public class Player : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.tag == "Flower")
+        if (col.tag == "Flower" && !attacked)
         {
-            Flower flower = col.GetComponent<Flower>();
-            if (flower.IsFixed)
-            {
-                triggers.Add(flower);
-            }
-            else
-            {
-                GrabFlower(flower);
-            }
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D col)
-    {
-        if (col.tag == "Flower")
-        {
-            Flower flower = col.GetComponent<Flower>();
-            if (flower.IsFixed)
-            {
-                triggers.Remove(flower);
-            }
+            GrabFlower(col.GetComponent<Flower>());
         }
     }
 
