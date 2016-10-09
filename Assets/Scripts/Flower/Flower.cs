@@ -14,6 +14,8 @@ public class Flower : MonoBehaviour {
         }
     }
 
+    private Player owner;
+
     private Renderer ren;
     private Collider2D col;
     private Rigidbody2D rig;
@@ -56,7 +58,12 @@ public class Flower : MonoBehaviour {
         point = p;
     }
 
-    public void Grab()
+    public bool IsOwner(Player player)
+    {
+        return owner == player;
+    }
+
+    public void Grab(Player player)
     {
         if (!grabable)
         {
@@ -67,6 +74,7 @@ public class Flower : MonoBehaviour {
             point.Free();
             point = null;
         }
+        owner = player;
         godAttracted = false;
         ren.enabled = false;
         col.enabled = false;
@@ -80,6 +88,7 @@ public class Flower : MonoBehaviour {
         ren.enabled = true;
         grabable = !underGod;
         rig.gravityScale = 1f;
+        owner = null;
 
         float angle = Random.Range(Mathf.PI / 6f, 5f * Mathf.PI / 6f);
         Vector2 velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
@@ -90,5 +99,14 @@ public class Flower : MonoBehaviour {
     {
         grabable = true;
         godAttracted = true;
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.tag == "God")
+        {
+            owner.AddKarma();
+            Destroy(gameObject);
+        }
     }
 }
