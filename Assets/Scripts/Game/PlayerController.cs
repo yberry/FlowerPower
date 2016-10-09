@@ -12,8 +12,6 @@ public class PlayerController : MonoBehaviour
     public float wallSpeedVelocity;
     public float wallJumpVelocity;
     public bool releaseButtonToJump;
-    public LayerMask groundLayer;
-
 
     float jumpSizeLive;
 
@@ -36,7 +34,12 @@ public class PlayerController : MonoBehaviour
     bool rightsideTouch;
     bool leftsideTouch;
 
+    float stepTime = 0.15f;
+    float stepTimeLive;
+
+
     Rigidbody2D rig;
+    SoundEffectController sounds;
 
     //Flip the character's sprite
     private void flip()
@@ -51,6 +54,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         rig = GetComponent<Rigidbody2D>();
+        sounds = SoundEffectController.Instance;
     }
 
     // Update is called once per frame
@@ -63,6 +67,7 @@ public class PlayerController : MonoBehaviour
     {
         float horMove = Input.GetAxis("hor_move");
         bool jumpInput = Input.GetButton("Jump");
+        bool jumpInputDown = Input.GetButtonDown("Jump");
 
         if (canMove)
         {
@@ -117,6 +122,7 @@ public class PlayerController : MonoBehaviour
                     jumping = true;
                     onGround = false;
                     jumpTimerLive = jumpTimer;
+                    Debug.Log("JUMP");
                 }
             }
 
@@ -162,6 +168,17 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+            if(velocity.magnitude > 1.0f && onGround && stepTimeLive <= 0.0f)
+            {
+                stepTimeLive = stepTime;
+                sounds.MakeStepSound();
+            }
+            if(stepTimeLive > 0.0f)
+            {
+                stepTimeLive -= Time.deltaTime;
+            }
+
+
             velocity.y += acceleration.y;
             velocity.x += acceleration.x;
 
@@ -187,7 +204,8 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D coll)
     {
-        if(coll.gameObject.tag == "upside") upsideTouch = true;
+        sounds.MakeLandingSound();
+        if (coll.gameObject.tag == "upside") upsideTouch = true;
         if(coll.gameObject.tag == "downside") downsideTouch = true;
         if(coll.gameObject.tag == "leftside") leftsideTouch = true;
         if(coll.gameObject.tag == "rightside") rightsideTouch = true;
@@ -195,9 +213,21 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D coll)
     {
-        if (coll.gameObject.tag == "upside") upsideTouch = false;
+        if (coll.gameObject.tag == "upside")
+        {
+            upsideTouch = false;
+            sounds.MakeJumpSound();
+        }
         if (coll.gameObject.tag == "downside") downsideTouch = false;
-        if (coll.gameObject.tag == "leftside") leftsideTouch = false;
-        if (coll.gameObject.tag == "rightside") rightsideTouch = false;
+        if (coll.gameObject.tag == "leftside")
+        {
+            leftsideTouch = false;
+            sounds.MakeWallJumpSound();
+        }
+        if (coll.gameObject.tag == "rightside")
+        {
+            rightsideTouch = false;
+            sounds.MakeWallJumpSound();
+        }
     }
 }
