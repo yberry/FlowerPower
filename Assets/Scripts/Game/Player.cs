@@ -61,6 +61,9 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (underGod)
+            Debug.Log("GODISWATCHINGYOU");
+
         if (attacked || attacking || flowers.Count == 0)
         {
             return;
@@ -68,14 +71,7 @@ public class Player : MonoBehaviour {
 
         if (Input.GetButtonDown(input[1]) && underGod && player.onGround)
         {
-            if(tag == "Player")
-            {
-                animator.Play("p1_offrande");
-            }
-            if(tag == "Player2")
-            {
-                animator.Play("P2_offrande");
-            }
+            Debug.Log("LAUNCH");
             LaunchFlower();
         }
         else if (Input.GetButtonDown(input[0]))
@@ -169,7 +165,7 @@ public class Player : MonoBehaviour {
             SoundEffectController.Instance.MakePunishedSound();
         }
         flowers.Clear();
-        //inventory.SetNbFlowers(0);
+        inventory.SetNbFlowers(0);
         SoundEffectController.Instance.MakeHurtSound();
         if (player.onGround)
         {
@@ -191,10 +187,21 @@ public class Player : MonoBehaviour {
         {
             return;
         }
+
+        if (tag == "Player")
+        {
+            animator.Play("p1_offrande");
+        }
+        if (tag == "Player2")
+        {
+            animator.Play("P2_offrande");
+        }
+
         flowers[0].Launch();
         flowers.RemoveAt(0);
         inventory.SetNbFlowers(flowers.Count);
         StartCoroutine(CoolDownAttacked());
+        AddKarma();
     }
 
     public void AddKarma()
