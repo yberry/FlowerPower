@@ -83,6 +83,7 @@ public class PlayerController : MonoBehaviour
                 acceleration.y = -gravity;
                 onGround = false;
                 jumping = false;
+                onWall = false;
                 if(leftsideTouch || rightsideTouch) //Corner case
                 {
                     velocity.x = 0.0f;
@@ -127,7 +128,7 @@ public class PlayerController : MonoBehaviour
 
             if (onWall)
             {
-                if (jumpInput && !jumping)
+                if (jumpInput)
                 {
                     acceleration.y = wallJumpSize;
                     if (leftsideTouch)
@@ -181,17 +182,6 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D coll)
     {
-       /*switch(coll.gameObject.tag)
-        {
-            case "upside": upsideTouch = true;
-                break;
-            case "downside": downsideTouch = true;
-                break;
-            case "leftside": leftsideTouch = true;
-                break;
-            case "rightside": rightsideTouch = true;
-                break;
-        }*/
         if(coll.gameObject.tag == "upside") upsideTouch = true;
         if(coll.gameObject.tag == "downside") downsideTouch = true;
         if(coll.gameObject.tag == "leftside") leftsideTouch = true;
@@ -200,17 +190,6 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D coll)
     {
-        /*switch (coll.gameObject.tag)
-        {
-            case "upside": upsideTouch = false;
-                break;
-            case "downside": downsideTouch = false;
-                break;
-            case "leftside": leftsideTouch = false;
-                break;
-            case "rightside": rightsideTouch = false;
-                break;
-        }*/
         if (coll.gameObject.tag == "upside") upsideTouch = false;
         if (coll.gameObject.tag == "downside") downsideTouch = false;
         if (coll.gameObject.tag == "leftside") leftsideTouch = false;
