@@ -55,6 +55,8 @@ public class Player : MonoBehaviour {
         Renderer ren = GetComponent<Renderer>();
         ren.shadowCastingMode = ShadowCastingMode.On;
         ren.receiveShadows = true;
+
+        inventory.SetPlayer(player1 ? 0 : 1);
 	}
 	
 	// Update is called once per frame
