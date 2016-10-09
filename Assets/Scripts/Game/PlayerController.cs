@@ -180,7 +180,7 @@ public class PlayerController : MonoBehaviour
                 if (velocity.x < 0.5f && facingRight)
                 {
                     velocity.x = 0.0f;
-                    if (onGround && !player.attacking && !player.attacked && !player.launching)
+                    if (onGround && (!player.attacking || !player.attacked || !player.launching))
                     {
                         if (tag == "Player")
                             animator.Play("P1_idle");
@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviour
                 if (velocity.x > -0.5f && !facingRight)
                 {
                     velocity.x = 0.0f;
-                    if (onGround && !player.attacking && !player.attacked && !player.launching)
+                    if (onGround && (!player.attacking || !player.attacked || !player.launching))
                     {
                         if (tag == "Player")
                             animator.Play("P1_idle");
@@ -222,7 +222,7 @@ public class PlayerController : MonoBehaviour
                 velocity.x = 10.0f;
 
             rig.velocity = velocity * movementCoeff;
-            if(rig.velocity.x != 0f && onGround && !player.attacking && !player.attacked && !player.launching)
+            if(rig.velocity.x != 0f && onGround && (!player.attacking || !player.attacked || !player.launching))
             {
                 if(tag == "Player")
                     animator.Play("P1_run");

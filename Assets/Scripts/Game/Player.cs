@@ -64,7 +64,6 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (underGod)
-            Debug.Log("GODISWATCHINGYOU");
 
         if (attacked || attacking || flowers.Count == 0)
         {
@@ -73,7 +72,6 @@ public class Player : MonoBehaviour {
 
         if (Input.GetButtonDown(input[1]) && underGod && player.onGround)
         {
-            Debug.Log("LAUNCH");
             LaunchFlower();
         }
         else if (Input.GetButtonDown(input[0]))
@@ -196,7 +194,7 @@ public class Player : MonoBehaviour {
         {
             animator.Play("P2_offrande");
         }
-
+        launching = true;
         flowers[0].Launch();
         flowers.RemoveAt(0);
         inventory.SetNbFlowers(flowers.Count);
