@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
             acceleration.x = horMove;
 
             //Vertical movement
-            if (!rig.IsTouchingLayers(groundLayer))
+            /*if (!rig.IsTouchingLayers(groundLayer))
             {
                     acceleration.y = -gravity;
             }
@@ -95,18 +95,51 @@ public class PlayerController : MonoBehaviour
                     velocity.y = 0.0f;
                     onWall = false;
                 }
+            }*/
+
+            if (upsideTouch)
+            {
+                acceleration.y = 0.0f;
+                velocity.y = 0.0f;
+                onWall = false;
+                onGround = true;
+            }
+            else if(leftsideTouch || rightsideTouch)
+            {
+                velocity.y = -wallSpeedVelocity;
+                acceleration.y = -gravity;
+                onGround = false;
+                onWall = true;
+            }
+            else if (downsideTouch)
+            {
+                velocity.y = -2.0f;
+                acceleration.y = -gravity;
+                onGround = false;
+                jumping = false;
+            }
+            else
+            {
+                acceleration.y = -gravity;
+                onGround = false;
+                onWall = false;
+            }
+
+            if (onGround)
+            {
+                if (jumpInput) //When the button is pressed
+                {
+                    acceleration.y = jumpSize;
+                    jumpSizeLive = jumpSize;
+                    jumping = true;
+                    onGround = false;
+                    jumpTimerLive = jumpTimer;
+                }
             }
 
             //Jump behaviour
-            if (jumpInput && onGround) //When the button is pressed
+            if (jumping)
             {
-                acceleration.y = jumpSize;
-                jumpSizeLive = jumpSize;
-                jumping = true;
-                onGround = false;
-                jumpTimerLive = jumpTimer;
-            }
-            if (jumping) { //Decrement the timer
                 if (jumpInput && jumpTimerLive > 0.0f) //While on jump
                 {
                     acceleration.y = jumpSizeLive;
@@ -115,24 +148,26 @@ public class PlayerController : MonoBehaviour
                 jumpTimerLive -= Time.deltaTime;
             }
 
-
-            if(jumpInput && onWall)
+            if (onWall)
             {
-                acceleration.y = jumpSize/2;
-                if (leftsideTouch)
+                if(jumpInput)
                 {
-                    acceleration.x = -wallJumpVelocity; 
+                    acceleration.y = jumpSize * 2.5f;
+                    if (leftsideTouch)
+                    {
+                        acceleration.x = -wallJumpVelocity; 
+                    }
+                    if (rightsideTouch)
+                    {
+                        acceleration.x = wallJumpVelocity;
+                    }
                 }
-                if (rightsideTouch)
-                {
-                    acceleration.x = wallJumpVelocity;
-                }
-                onWall = false;
             }
+
             velocity.y += acceleration.y;
 
             //Add friction only when the player doesn't touch the joystick
-            if (horMove == 0 && !onWall)
+            if (horMove == 0)
             {
                 friction.x = -1 * velocity.normalized.x * frictionCoeff;
                 acceleration.x += friction.x;
@@ -148,6 +183,7 @@ public class PlayerController : MonoBehaviour
 
             velocity.x += acceleration.x;
 
+            //Velocity cap
             if (velocity.x < -10.0f)
                 velocity.x = -10.0f;
             else if (velocity.x > 10.0f)
@@ -155,12 +191,13 @@ public class PlayerController : MonoBehaviour
 
             rig.velocity = velocity;
         }
-
-        if(velocity.x < 0.0f && facingRight)
+        
+        //Sptire facing on the good direction
+        if(horMove < 0.0f && facingRight)
         {
             flip();
         }
-        else if (velocity.x > 0.0f && !facingRight)
+        else if (horMove > 0.0f && !facingRight)
         {
             flip();
         }
@@ -190,10 +227,8 @@ public class PlayerController : MonoBehaviour
             case "downside": downsideTouch = false;
                 break;
             case "leftside": leftsideTouch = false;
-                            onWall = false;
                 break;
             case "rightside": rightsideTouch = false;
-                            onWall = false;
                 break;
         }
     }
