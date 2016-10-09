@@ -14,6 +14,7 @@ public class ScreenShake : MonoBehaviour {
 	float timer = 0;
 	bool shake = false;
 
+	public bool ShakeonSpace = false;
 
 
 	// Use this for initialization
@@ -33,7 +34,7 @@ public class ScreenShake : MonoBehaviour {
 				shake = false;
 				transform.position = StartPos;
 			}
-		if (Input.GetKeyDown ("space")) {
+		if (Input.GetKeyDown ("space")&&ShakeonSpace) {
 			Shake ();
 		}
 	}
