@@ -22,8 +22,7 @@ public class Player : MonoBehaviour {
     {
         get
         {
-            //return God.Get.IsUnderGodView(transform.position);
-            return false;
+            return God.Get.IsUnderGodView(transform.position);
         }
     }
 
@@ -40,6 +39,9 @@ public class Player : MonoBehaviour {
     [Tooltip("Affichage du karma")]
     public Karma karma;
 
+    public string[] input;
+    PlayerController player;
+
 	// Use this for initialization
 	void Start () {
         attacked = false;
@@ -47,7 +49,7 @@ public class Player : MonoBehaviour {
         launching = false;
 
         animator = GetComponent<Animator>();
-
+        player = GetComponent<PlayerController>();
         flowers = new List<Flower>();
 
         Renderer ren = GetComponent<Renderer>();
@@ -57,18 +59,24 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //|| flowers.Count == 0
-        if (attacked || attacking)
+        if (attacked || attacking || flowers.Count == 0)
         {
             return;
         }
 
-        if (Input.GetButtonDown("Launch") && underGod && !animator.GetBool("inAir"))
+        if (Input.GetButtonDown(input[1]) && underGod && player.onGround)
         {
-            animator.SetTrigger("offer");
+            if(tag == "Player")
+            {
+                animator.Play("p1_offrande");
+            }
+            if(tag == "Player2")
+            {
+                animator.Play("P2_offrande");
+            }
             LaunchFlower();
         }
-        else if (Input.GetButtonDown("Attack"))
+        else if (Input.GetButtonDown(input[0]))
         {
             Attack();
         }
@@ -120,13 +128,18 @@ public class Player : MonoBehaviour {
         {
             if(tag == "Player")
             {
-                animator.Play("P1_attaque_sol");
+                if(player.onGround)
+                    animator.Play("P1_attaque_sol");
+                else
+                    animator.Play("P1_attaque_air");
             }
             if (tag == "Player2")
             {
-                animator.Play("P2_attaque_sol");
+                if (player.onGround)
+                    animator.Play("P2_attaque_sol");
+                else
+                    animator.Play("P2_attaque_air");
             }
-            //animator.SetTrigger("attack");
             SoundEffectController.Instance.MakeAttackSound();
             attacking = true;
             StartCoroutine(CoolDownAttacked());
@@ -135,7 +148,14 @@ public class Player : MonoBehaviour {
 
     void Attacked(bool init)
     {
-        animator.SetTrigger("hurt");
+        if(tag == "Player")
+        {
+            animator.Play("P1_hurt");
+        }
+        if (tag == "Player2")
+        {
+            animator.Play("P2_hurt");
+        }
         attacked = true;
         foreach (Flower flower in flowers)
         {
@@ -146,9 +166,9 @@ public class Player : MonoBehaviour {
             StartCoroutine(God.Get.Angry());
         }
         flowers.Clear();
-        inventory.SetNbFlowers(0);
+        //inventory.SetNbFlowers(0);
         SoundEffectController.Instance.MakeHurtSound();
-        if (!animator.GetBool("inAir"))
+        if (player.onGround)
         {
             StartCoroutine(CoolDownAttacked());
         }

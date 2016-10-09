@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     float jumpTimerLive;
 
     bool canMove = true;
-    bool onGround = false;
+    public bool onGround = false;
     bool jumping = false;
     bool facingRight = false;
     bool onWall = false;
@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D rig;
     Animator animator;
+    Player player;
 
     //Flip the character's sprite
     private void flip()
@@ -57,6 +58,7 @@ public class PlayerController : MonoBehaviour
     {
         rig = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        player = GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -102,7 +104,6 @@ public class PlayerController : MonoBehaviour
                         animator.Play("P1_idle");
                     if (tag == "Player2")
                         animator.Play("P2_idle");
-
                 }
             }
             else if(leftsideTouch || rightsideTouch)
@@ -179,7 +180,7 @@ public class PlayerController : MonoBehaviour
                 if (velocity.x < 0.5f && facingRight)
                 {
                     velocity.x = 0.0f;
-                    if (onGround)
+                    if (onGround && !player.attacking && !player.attacked)
                     {
                         if (tag == "Player")
                             animator.Play("P1_idle");
@@ -187,10 +188,10 @@ public class PlayerController : MonoBehaviour
                             animator.Play("P2_idle");
                     }
                 }
-                if (velocity.x > 0.5f && !facingRight)
+                if (velocity.x > -0.5f && !facingRight)
                 {
                     velocity.x = 0.0f;
-                    if (onGround)
+                    if (onGround && !player.attacking && !player.attacked)
                     {
                         if (tag == "Player")
                             animator.Play("P1_idle");
@@ -221,7 +222,7 @@ public class PlayerController : MonoBehaviour
                 velocity.x = 10.0f;
 
             rig.velocity = velocity * movementCoeff;
-            if(rig.velocity.x != 0f && onGround)
+            if(rig.velocity.x != 0f && onGround && !player.attacking && !player.attacked)
             {
                 if(tag == "Player")
                     animator.Play("P1_run");
