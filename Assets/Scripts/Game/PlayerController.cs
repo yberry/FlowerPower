@@ -248,9 +248,35 @@ public class PlayerController : MonoBehaviour
         {
             upsideTouch = true;
         }
-        if (coll.gameObject.tag == "downside") downsideTouch = true;
+        if(coll.gameObject.tag == "downside") downsideTouch = true;
         if(coll.gameObject.tag == "leftside") leftsideTouch = true;
         if(coll.gameObject.tag == "rightside") rightsideTouch = true;
+
+        if (tag == "Player2")
+        {
+            if (coll.gameObject.tag == "headTrigger")
+            {
+                rig.velocity = new Vector2(rig.velocity.x, -10.0f);
+            }
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D coll)
+    {
+        if (tag == "Player")
+        {
+            if (coll.gameObject.tag == "headTrigger2")
+            {
+                transform.position = new Vector2(transform.position.x, coll.transform.position.y - 0.05f);
+            }
+        }
+        if (tag == "Player2")
+        {
+            if (coll.gameObject.tag == "headTrigger")
+            {
+                transform.position = new Vector2(transform.position.x, coll.transform.position.y - 0.05f);
+            }
+        }
     }
 
     void OnTriggerExit2D(Collider2D coll)
