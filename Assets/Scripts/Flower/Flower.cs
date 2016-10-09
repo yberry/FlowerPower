@@ -51,6 +51,7 @@ public class Flower : MonoBehaviour {
         }
 
         transform.position = Vector3.MoveTowards(transform.position, God.Get.transform.position, lauchSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.AngleAxis(lauchSpeed * Time.deltaTime, Vector3.forward);
 	}
 
     public void SetPoint(FlowerSpawnPoint p)

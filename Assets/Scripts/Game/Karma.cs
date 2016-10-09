@@ -27,6 +27,14 @@ public class Karma : MonoBehaviour {
         }
     }
 
+    public bool IsMax
+    {
+        get
+        {
+            return nbHearts == maxHearts;
+        }
+    }
+
     private int nbHearts = 0;
 
     private Image image;
