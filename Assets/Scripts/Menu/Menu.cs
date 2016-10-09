@@ -16,7 +16,7 @@ public class Menu : MonoBehaviour {
     [Tooltip("Son de sélection")]
     public AudioClip selectSound;
     [Tooltip("Scène de jeu")]
-    public Scene game;
+    public Object game;
 
 	// Use this for initialization
 	void Start () {

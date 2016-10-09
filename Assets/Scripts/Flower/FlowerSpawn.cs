@@ -22,6 +22,10 @@ public class FlowerSpawn : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        foreach (FlowerSpawnPoint point in spawnPoints)
+        {
+            Spawn();
+        }
         StartCoroutine(SpawnLoop());
 	}
 
