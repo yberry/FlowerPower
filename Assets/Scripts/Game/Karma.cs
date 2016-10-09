@@ -4,7 +4,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class Karma : MonoBehaviour {
 
-    private const int maxHearts = 10;
+    private const int maxHearts = 7;
 
     private static float[] amount
     {
@@ -13,15 +13,12 @@ public class Karma : MonoBehaviour {
             return new float[]
             {
                 0f,
-                0.05f,
-                0.13f,
+                0.1f,
                 0.2f,
-                0.28f,
-                0.37f,
+                0.35f,
                 0.5f,
-                0.58f,
-                0.75f,
-                0.87f,
+                0.67f,
+                0.85f,
                 1f
             };
         }

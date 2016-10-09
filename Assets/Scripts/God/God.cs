@@ -108,6 +108,7 @@ public class God : MonoBehaviour {
 
     public IEnumerator Happy()
     {
+        animator.SetBool("colere", false);
         animator.SetBool("content", true);
         yield return new WaitForSeconds(5f);
         animator.SetBool("content", false);
@@ -115,6 +116,7 @@ public class God : MonoBehaviour {
 
     public IEnumerator Angry()
     {
+        animator.SetBool("content", false);
         animator.SetBool("colere", true);
         yield return new WaitForSeconds(5f);
         animator.SetBool("colere", false);

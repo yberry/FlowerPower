@@ -138,6 +138,10 @@ public class Player : MonoBehaviour {
         {
             flower.Throw(init);
         }
+        if (init)
+        {
+            StartCoroutine(God.Get.Angry());
+        }
         flowers.Clear();
         inventory.SetNbFlowers(0);
         SoundEffectController.Instance.MakeHurtSound();
