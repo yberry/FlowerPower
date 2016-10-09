@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
     public string[] input;
 
     Rigidbody2D rig;
+    Animator animator;
 
     //Flip the character's sprite
     private void flip()
@@ -55,6 +56,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         rig = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -85,6 +87,8 @@ public class PlayerController : MonoBehaviour
                 {
                     velocity.x = 0.0f;
                 }
+                animator.SetBool("inAir", false);
+                animator.SetTrigger("land");
             }
             else if (downsideTouch)
             {
@@ -122,6 +126,7 @@ public class PlayerController : MonoBehaviour
                     jumping = true;
                     onGround = false;
                     jumpTimerLive = jumpTimer;
+                    animator.SetTrigger("jump");
                 }
             }
 
@@ -188,6 +193,7 @@ public class PlayerController : MonoBehaviour
                 velocity.x = 10.0f;
 
             rig.velocity = velocity * movementCoeff;
+            animator.SetBool("run", rig.velocity.x != 0f);
         }
         
         //Sprite facing on the good direction

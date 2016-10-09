@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
+using System.Collections;
 using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
     SoundEffectController sounds;
+
+    private Animator animator;
 
     private const int maxFlowers = 5;
 
@@ -24,11 +27,30 @@ public class Player : MonoBehaviour {
             return God.Get.IsUnderGodView(transform.position);
         }
     }
-    private bool attacked = false;
-    private bool attacking = false;    
+
+    private float coolDownAttacked;
+
+    public bool attacked { get; set; }
+    public bool attacking { get; set; }
+
+    [Tooltip("Joueur 1 ?")]
+    public bool player1;
 
 	// Use this for initialization
 	void Start () {
+        attacked = false;
+        attacking = false;
+
+        animator = GetComponent<Animator>();
+        RuntimeAnimatorController ac = animator.runtimeAnimatorController;
+        foreach (AnimationClip clip in ac.animationClips)
+        {
+            if (clip.name == "P" + (player1 ? "1" : "2") + "_hurt")
+            {
+                coolDownAttacked = clip.length;
+            }
+        }
+
         flowers = new List<Flower>();
 
         Renderer ren = GetComponent<Renderer>();
@@ -38,19 +60,19 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (attacked || attacking)
+        if (attacked || attacking || flowers.Count == 0)
         {
             return;
         }
 
-        if (Input.GetButtonDown("Launch") && underGod && flowers.Count > 0)
+        if (Input.GetButtonDown("Launch") && underGod)
         {
+            animator.SetTrigger("offer");
             LaunchFlower();
         }
 
-        else if (Input.GetButtonDown("Attack") && flowers.Count > 0)
+        else if (Input.GetButtonDown("Attack"))
         {
-            attacking = true;
             Attack();
         }
 	}
@@ -87,19 +109,21 @@ public class Player : MonoBehaviour {
 
     void Attack()
     {
-        sounds.MakeAttackSound();
         if (underGod)
         {
             Attacked(true);
         }
         else
         {
+            animator.SetTrigger("attack");
+            sounds.MakeAttackSound();
             attacking = true;
         }
     }
 
     void Attacked(bool init)
     {
+        animator.SetTrigger("hurt");
         attacked = true;
         foreach (Flower flower in flowers)
         {
@@ -107,6 +131,16 @@ public class Player : MonoBehaviour {
         }
         flowers.Clear();
         sounds.MakeHurtSound();
+        if (!animator.GetBool("inAir"))
+        {
+            StartCoroutine(CoolDownAttacked());
+        }
+    }
+
+    IEnumerator CoolDownAttacked()
+    {
+        yield return new WaitForSeconds(coolDownAttacked);
+        attacked = false;
     }
 
     void LaunchFlower()
