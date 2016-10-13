@@ -22,10 +22,6 @@ public class FlowerSpawn : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        foreach (FlowerSpawnPoint point in spawnPoints)
-        {
-            Spawn();
-        }
         StartCoroutine(SpawnLoop());
 	}
 
@@ -54,6 +50,16 @@ public class FlowerSpawn : MonoBehaviour {
         {
             rand = Random.Range(0, spawnPoints.Length);
         }
-        spawnPoints[rand].Spawn(prefabsFlower[Random.Range(0, prefabsFlower.Length)], spawnSounds[Random.Range(0, spawnSounds.Length)]);
+        spawnPoints[rand].Spawn(GetRandomFlower(), GetRandomSound());
+    }
+
+    GameObject GetRandomFlower()
+    {
+        return prefabsFlower[Random.Range(0, prefabsFlower.Length)];
+    }
+
+    AudioClip GetRandomSound()
+    {
+        return spawnSounds[Random.Range(0, spawnSounds.Length)];
     }
 }

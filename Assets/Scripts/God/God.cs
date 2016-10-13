@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(AudioSource))]
 public class God : MonoBehaviour {
@@ -10,6 +11,21 @@ public class God : MonoBehaviour {
         get
         {
             return instance;
+        }
+    }
+
+    private static List<string> tagsPlatforms
+    {
+        get
+        {
+            return new List<string>
+            {
+                "upside",
+                "leftside",
+                "rightside",
+                "downside",
+                "platform"
+            };
         }
     }
 
@@ -102,7 +118,22 @@ public class God : MonoBehaviour {
             return false;
         }
 
-        return !Physics.Raycast(sight.transform.position, direction);
+        RaycastHit hit;
+        if (Physics.Raycast(sight.transform.position, direction, out hit))
+        {
+            if (tagsPlatforms.Contains(hit.transform.tag))
+            {
+                return direction.magnitude < hit.distance;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return true;
+        }
     }
 
     public IEnumerator Happy()
